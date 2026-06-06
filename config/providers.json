@@ -1,0 +1,38 @@
+{
+  "openai": {
+    "type": "openai",
+    "api_key": "",
+    "default_model": "gpt-4o-mini",
+    "default": false
+  },
+  "anthropic": {
+    "type": "anthropic",
+    "api_key": "",
+    "default_model": "claude-3-5-haiku",
+    "default": false
+  },
+  "nvidia": {
+    "type": "nvidia",
+    "api_key": "",
+    "default_model": "meta/llama-3.1-8b-instruct",
+    "default": false
+  },
+  "gemini": {
+    "type": "gemini",
+    "api_key": "",
+    "default_model": "gemini-1.5-pro",
+    "default": false
+  },
+  "huggingface": {
+    "type": "huggingface",
+    "api_key": "",
+    "default_model": "mistralai/Mistral-7B-Instruct-v0.3",
+    "default": false
+  },
+  "grok": {
+    "type": "grok",
+    "api_key": "",
+    "default_model": "grok-2-latest",
+    "default": false
+  }
+}

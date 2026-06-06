@@ -1,0 +1,14 @@
+{
+  "general": {
+    "description": "General purpose workflow for various tasks"
+  },
+  "code": {
+    "description": "Code generation and analysis workflow"
+  },
+  "research": {
+    "description": "Research and information gathering workflow"
+  },
+  "analysis": {
+    "description": "Data analysis workflow"
+  }
+}

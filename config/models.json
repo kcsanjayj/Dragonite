@@ -1,0 +1,37 @@
+{
+  "gpt-4o": {
+    "provider": "openai",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "gpt-4o-mini": {
+    "provider": "openai",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "claude-3-5-sonnet": {
+    "provider": "anthropic",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "provider": "nvidia",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "gemini-1.5-pro": {
+    "provider": "gemini",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "mistralai/Mistral-7B-Instruct-v0.3": {
+    "provider": "huggingface",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "grok-2-latest": {
+    "provider": "grok",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  }
+}

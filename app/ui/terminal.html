@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dragon Terminal UI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="brand">Dragonite Terminal</div>
+      <div class="header-actions">
+        <span class="status-chip" id="server-status">Connecting...</span>
+        <button id="refresh-config" class="ghost-button">Reload</button>
+      </div>
+    </header>
+
+    <section class="main-panel">
+      <div class="terminal-container">
+        <div class="terminal-header">Dragon Agent Console</div>
+        <div class="terminal-window" id="terminal-window" aria-live="polite" role="log"></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="panel">
+          <h2>Connection</h2>
+          <label>
+            Provider
+            <select id="provider-select"></select>
+          </label>
+          <label>
+            Model
+            <input id="model-input" type="text" placeholder="e.g. gpt-4o-mini" />
+          </label>
+          <label>
+            API Key
+            <input id="api-key-input" type="password" placeholder="Enter API key" autocomplete="off" />
+            <div class="input-hint" id="api-key-hint">Enter the API key matching your selected provider.</div>
+          </label>
+          <div class="config-actions">
+            <button id="save-config" class="ghost-button">Save</button>
+            <button id="toggle-settings" class="ghost-button">Toggle terminal help</button>
+          </div>
+          <div class="config-help" id="config-help">
+            <p>Use an API key for your chosen provider. Make sure the key prefix matches the provider selected (for example, OpenAI keys start with <code>sk-</code> and NVIDIA keys start with <code>nvapi-</code>).</p>
+            <p>Press <strong>Enter</strong> to send, <strong>Shift+Enter</strong> for a new line.</p>
+          </div>
+        </div>
+
+        <div class="panel metrics-panel">
+          <h2>Metrics</h2>
+          <div class="metric-row"><span>System</span><span id="status-text">Ready</span></div>
+          <div class="metric-row"><span>Execution ID</span><span id="execution-id">—</span></div>
+          <div class="metric-row"><span>Nodes</span><span id="nodes-info">—</span></div>
+          <div class="metric-row"><span>Duration</span><span id="duration-info">—</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="composer">
+      <div class="composer-left">➜</div>
+      <textarea id="user-input" placeholder="Type your question and press Enter to send..."></textarea>
+      <button id="send-button">Send</button>
+    </footer>
+  </div>
+
+  <script src="terminal.js"></script>
+</body>
+</html>

@@ -77,17 +77,6 @@ The terminal-style page streams the agent response and shows simple metrics.
 - `app/ui/` contains the new terminal UI
 - `tests/` holds end-to-end and integration checks
 
----
-
-## Why this is recruiter-friendly
-
-- Uses FastAPI with async handlers
-- Has modular agent components and a clear execution flow
-- Integrates multiple LLM providers cleanly
-- Includes a lightweight browser-based terminal UI
-- Shows practical experience with configuration, persistence, and streaming responses
-
----
 
 ## Run tests
 

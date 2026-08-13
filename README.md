@@ -1,705 +1,397 @@
-# Autonomous AI Agent
+# 🐉 Dragonite — Autonomous Multi-Agent System
 
-A modular, task-oriented **Autonomous AI Agent** built in Python.
+> **A graph-based autonomous AI agent system that plans, executes, evaluates, repairs, and synthesizes complex tasks.**
 
-The project takes a user's natural-language request, creates a task plan, executes independent tasks in parallel, evaluates results, handles failures/retries, and produces a final response.
-
-The goal of this project is not to claim "AGI", but to demonstrate practical understanding of **LLM orchestration, task graphs, retries, modular architecture, memory, tool execution, and autonomous workflows**.
-
----
-
-## Why I Built This
-
-Most beginner AI projects simply do:
-
-```text
-User → LLM → Answer
-```
-
-I wanted to explore a more structured architecture:
-
-```text
-User Request
-     ↓
-Memory
-     ↓
-Planner
-     ↓
-Task Graph / DAG
-     ↓
-Executor
-     ↓
-Critic
-     ↓
-Repair / Replanning
-     ↓
-Synthesis
-     ↓
-Final Answer
-```
-
-This project helped me understand how an LLM can be used as a component inside a larger software system rather than being the entire system.
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python\&logoColor=white)](https://www.python.org/)
+[![Google ADK](https://img.shields.io/badge/Google%20ADK-2.6.3-4285F4?logo=google)](https://google.github.io/adk-docs/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## What It Does
+## ⚡ 30-Second Overview
 
-The agent can:
+**Dragonite is not a single LLM call.**
 
-* Accept natural-language requests.
-* Create multi-step execution plans.
-* Represent tasks as a dependency graph.
-* Execute independent tasks concurrently.
-* Execute LLM-based tasks.
-* Execute tool-based tasks.
-* Retry failed tasks.
-* Track task status and progress.
-* Critically evaluate completed tasks.
-* Support repair/replanning workflows.
-* Maintain a modular memory layer.
-* Synthesize task outputs into a concise final response.
-* Expose a simple CLI interface.
-
-### Example
-
-Input:
-
-```text
-BMW vs Audi which is best?
-```
-
-The planner may produce:
-
-```text
-research_bmw
-research_audi
-       ↓
-    compare
-       ↓
-   recommend
-```
-
-The executor then runs the independent research tasks before executing dependent tasks.
-
----
-
-# Architecture
-
-```text
-                         ┌──────────────────┐
-                         │    User / CLI    │
-                         └────────┬─────────┘
-                                  │
-                                  ▼
-                         ┌──────────────────┐
-                         │ AutonomousEngine │
-                         └────────┬─────────┘
-                                  │
-             ┌────────────────────┼────────────────────┐
-             │                    │                    │
-             ▼                    ▼                    ▼
-        ┌─────────┐          ┌──────────┐        ┌─────────┐
-        │ Memory  │          │ Planner  │        │ Logger  │
-        └─────────┘          └────┬─────┘        └─────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │   Task Graph    │
-                         │      (DAG)      │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │    Executor     │
-                         └────────┬────────┘
-                                  │
-                    ┌─────────────┴─────────────┐
-                    │                           │
-                    ▼                           ▼
-              ┌──────────┐                ┌──────────┐
-              │ LLM Task │                │ Tool Task│
-              └──────────┘                └──────────┘
-                    │                           │
-                    └─────────────┬─────────────┘
-                                  ▼
-                            ┌──────────┐
-                            │  Critic  │
-                            └────┬─────┘
-                                 │
-                         ┌───────┴────────┐
-                         │                │
-                         ▼                ▼
-                      Accept            Repair
-                         │                │
-                         │                ▼
-                         │           Replanner
-                         │                │
-                         └───────┬────────┘
-                                 ▼
-                           ┌────────────┐
-                           │Synthesizer │
-                           └─────┬──────┘
-                                 │
-                                 ▼
-                           Final Answer
-```
-
----
-
-# Project Structure
-
-```text
-adk-agent/
-│
-├── multi_tool_agent/
-│   │
-│   ├── agent.py
-│   ├── cli.py
-│   ├── config.py
-│   ├── providers.py
-│   │
-│   ├── llm/
-│   │   └── llm_client.py
-│   │
-│   ├── model/
-│   │   └── model_router.py
-│   │
-│   ├── core/
-│   │   ├── graph.py
-│   │   ├── node.py
-│   │   ├── state.py
-│   │   │
-│   │   └── plan/
-│   │       ├── plan_converter.py
-│   │       └── plan_schema.py
-│   │
-│   ├── orchestration/
-│   │   ├── planner.py
-│   │   ├── executor.py
-│   │   ├── critic.py
-│   │   ├── replanner.py
-│   │   ├── router.py
-│   │   └── synthesizer.py
-│   │
-│   ├── runtime/
-│   │   └── engine.py
-│   │
-│   ├── memory/
-│   │   ├── context.py
-│   │   ├── manager.py
-│   │   ├── memory_store.py
-│   │   ├── models.py
-│   │   └── store.py
-│   │
-│   ├── tools/
-│   │   ├── builtins.py
-│   │   ├── executor.py
-│   │   ├── manager.py
-│   │   └── tool_registry.py
-│   │
-│   └── observability/
-│       ├── logger.py
-│       └── tracer.py
-│
-├── data/
-├── .env
-├── requirements.txt
-├── architecture.md
-├── run_agent.py
-└── README.md
-```
-
----
-
-# Core Components
-
-## 1. AutonomousEngine
-
-`AutonomousEngine` is the main orchestration layer.
-
-It coordinates:
-
-* Planning
-* Execution
-* Criticism
-* Replanning
-* Synthesis
-* Memory
-* Observability
-
-The engine also manages the shared LLM client used by different components.
-
----
-
-## 2. Planner
-
-The planner converts a natural-language request into executable tasks.
-
-For example:
-
-```text
-User:
-BMW vs Audi which is best?
-```
-
-Possible plan:
-
-```text
-research_bmw
-research_audi
-compare
-recommend
-```
-
-Dependencies are represented explicitly:
-
-```text
-research_bmw ─────┐
-                  ├──> compare ───> recommend
-research_audi ────┘
-```
-
-This allows independent tasks to run concurrently.
-
----
-
-## 3. Task Graph
-
-Tasks are represented as nodes in a directed acyclic graph (DAG).
-
-Each node can contain information such as:
-
-* Task ID
-* Task description
-* Task type
-* Dependencies
-* Input data
-* Output data
-* Status
-* Retry information
-* Metadata
-
-The graph allows the executor to determine which tasks are currently ready.
-
----
-
-## 4. Executor
-
-The executor is responsible for actually running tasks.
-
-It supports:
-
-### LLM tasks
-
-```text
-Task → Shared LLM Client → Result
-```
-
-### Tool tasks
-
-```text
-Task → ToolManager → Tool → Result
-```
-
-### Parallel execution
-
-Independent tasks can execute concurrently using Python's thread pool.
-
-For example:
-
-```text
-research_bmw   ──┐
-                 ├── execute in parallel
-research_audi  ──┘
-```
-
-while:
-
-```text
-compare
-```
-
-waits for both dependencies.
-
----
-
-## 5. Retry Mechanism
-
-Temporary failures should not immediately terminate the entire workflow.
-
-The executor supports retry attempts with increasing delays.
-
-Conceptually:
-
-```text
-Attempt 1
-   ↓
-Failure
-   ↓
-Attempt 2
-   ↓
-Failure
-   ↓
-Attempt 3
-   ↓
-Success / Failure
-```
-
-This is intentionally simple and transparent rather than pretending to provide sophisticated distributed fault tolerance.
-
----
-
-## 6. Critic
-
-The critic evaluates completed task outputs.
-
-A task can be:
-
-```text
-PASS
-```
-
-or:
-
-```text
-PASS WITH WARNING
-```
-
-or require repair.
-
-The purpose is to prevent every generated result from automatically being treated as correct.
-
----
-
-## 7. Replanner
-
-If a task requires improvement, the replanning layer can provide additional instructions or modify the workflow.
-
-This creates a feedback loop:
-
-```text
-Execute
-   ↓
-Critic
-   ↓
-Needs improvement?
-   ↓
-Replan / Repair
-   ↓
-Execute again
-```
-
----
-
-## 8. Synthesizer
-
-The synthesizer converts multiple task outputs into a single user-facing answer.
-
-It is deliberately configured to:
-
-* Hide internal execution details.
-* Put the conclusion first when appropriate.
-* Avoid exposing DAG/task/critic information.
-* Keep responses concise.
-* Prefer useful information over long generated explanations.
-
----
-
-# LLM Integration
-
-The project currently uses a shared LLM client architecture.
-
-The LLM client is injected into components such as:
-
-```text
-Planner
-Executor
-Synthesizer
-```
-
-rather than creating unrelated clients throughout the application.
-
-This makes provider/model changes easier and keeps the orchestration layer separated from the model layer.
-
----
-
-# Example Execution
-
-A simplified execution can look like:
+It separates an autonomous workflow into explicit engineering components:
 
 ```text
 User Request
      │
      ▼
-Planner
+  Planner
      │
      ▼
-5 Tasks Created
-     │
-     ▼
-2 Independent Tasks Ready
+  Task DAG
      │
      ├──────────────┐
      ▼              ▼
- Research A      Research B
-     │              │
+ Task A           Task B
      └──────┬───────┘
             ▼
-         Compare
+        Executor
             │
             ▼
-         Evaluate
+          Critic
+            │
+       ┌────┴────┐
+       │         │
+     Good      Failed
+       │         │
+       │      Replanner
+       │         │
+       └────◄────┘
             │
             ▼
-        Recommend
-            │
-            ▼
-        Synthesis
+       Synthesizer
             │
             ▼
        Final Answer
 ```
 
----
+### 🧠 What I built
 
-# Running the Project
-
-Activate the virtual environment:
-
-### Windows PowerShell
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-Run the main CLI:
-
-```powershell
-python -m multi_tool_agent.cli
-```
-
-Or use the project launcher:
-
-```powershell
-python run_agent.py
-```
+* 🗺️ LLM-powered task planning
+* 🕸️ Dependency-aware DAG execution
+* ⚡ Parallel execution of independent tasks
+* 🔧 Tool execution layer
+* 🔄 Retry handling
+* 🔍 Critic / quality-control stage
+* ♻️ Replanning and repair flow
+* 🧩 Shared LLM client architecture
+* 💾 Memory layer
+* 📊 Execution progress tracking
+* 🔭 Logging and tracing
+* 🔌 Google ADK integration
 
 ---
 
-# Example
+## 🎥 Live Terminal Demo
+
+The repository contains an **actual terminal recording of the working system**.
+
+### ⚡ Instant preview
+
+![Dragonite Demo](docs/demo/dragonite-demo.gif)
+
+▶️ **[Watch the complete 69-second demonstration](docs/demo/dragonite-demo.mp4)**
+
+The demonstration shows the real execution flow rather than a mocked UI:
+
+**request → planning → task execution → orchestration → evaluation → final output**
+
+---
+
+# 🏗️ Architecture
+
+Dragonite uses a modular orchestration architecture:
 
 ```text
-AUTONOMOUS AI AGENT
-
-You: BMW vs Audi which is best?
-
-Agent is working...
+                    ┌──────────────┐
+                    │ User Request │
+                    └───────┬──────┘
+                            ▼
+                    ┌──────────────┐
+                    │    Memory    │
+                    └───────┬──────┘
+                            ▼
+                    ┌──────────────┐
+                    │   Planner    │
+                    └───────┬──────┘
+                            ▼
+                    ┌──────────────┐
+                    │   Task DAG   │
+                    └───────┬──────┘
+                            ▼
+                    ┌──────────────┐
+                    │   Executor   │
+                    └───────┬──────┘
+                            ▼
+                    ┌──────────────┐
+                    │    Critic    │
+                    └───────┬──────┘
+                            │
+                 ┌──────────┴──────────┐
+                 ▼                     ▼
+              Accepted              Failed
+                 │                     │
+                 │               ┌─────▼─────┐
+                 │               │ Replanner │
+                 │               └─────┬─────┘
+                 │                     │
+                 └───────────◄─────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │ Synthesizer  │
+                    └───────┬──────┘
+                            ▼
+                       Final Answer
 ```
 
-The internal system can create a dependency graph and execute the appropriate tasks before returning the final response.
+### Key design decision
+
+The system intentionally separates:
+
+**planning ≠ execution ≠ evaluation ≠ recovery ≠ presentation**
+
+This makes the workflow easier to reason about, extend, debug, and test than putting the entire process into one large agent prompt.
+
+📐 **Detailed design:** [`architecture.md`](architecture.md)
 
 ---
 
-# Configuration
+# 🔥 Engineering Highlights
 
-Environment-specific configuration is kept outside the source code.
+### 1. Dependency-aware execution
 
-Example:
+Tasks are represented as nodes with dependencies.
+
+For example:
+
+```text
+research_A ──────┐
+                 ├──► compare ──► evaluate ──► recommend
+research_B ──────┘
+```
+
+Independent tasks can execute concurrently while dependent tasks wait for their prerequisites.
+
+---
+
+### 2. Parallel execution
+
+The executor uses Python concurrency to execute ready independent tasks in parallel.
+
+This provides a foundation for scaling workflows beyond strictly sequential execution.
+
+---
+
+### 3. Retry handling
+
+Task failures do not necessarily terminate the entire workflow.
+
+The executor supports configurable retry attempts with backoff.
+
+```text
+Attempt 1
+   │
+ Failure
+   ▼
+Attempt 2
+   │
+ Failure
+   ▼
+Attempt 3
+   │
+ Success / Final Failure
+```
+
+---
+
+### 4. Critic → Repair loop
+
+Dragonite does not blindly trust the first generated result.
+
+The critic can identify quality problems and feed repair information into the replanning process.
+
+```text
+Execute
+  │
+  ▼
+Critic
+  │
+  ├── Good ──────────────► Continue
+  │
+  └── Problem ─► Replan ─► Repair ─► Execute
+```
+
+---
+
+### 5. Shared LLM infrastructure
+
+Planner, executor, and synthesizer can use a shared configured LLM client.
+
+```text
+                 Shared LLM Client
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+       Planner      Executor    Synthesizer
+```
+
+This avoids unnecessary model-client duplication and keeps model configuration centralized.
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology             | Purpose                        |
+| ---------------------- | ------------------------------ |
+| **Python 3.11+**       | Core implementation            |
+| **Google ADK**         | Agent/application ecosystem    |
+| **LLM providers**      | Model execution                |
+| **FastAPI**            | API/application infrastructure |
+| **Pydantic**           | Validation and configuration   |
+| **ThreadPoolExecutor** | Parallel execution             |
+| **OpenTelemetry**      | Observability                  |
+| **python-dotenv**      | Environment configuration      |
+
+All pinned dependencies are documented in [`requirements.txt`](requirements.txt).
+
+---
+
+# 🚀 Run Locally
+
+## 1. Clone
+
+```bash
+git clone https://github.com/kcsanjayj/Dragonite.git
+cd Dragonite
+```
+
+## 2. Create environment
+
+### Windows
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+## 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Configure environment
+
+Copy:
+
+```text
+.env_example
+```
+
+to:
 
 ```text
 .env
 ```
 
-API keys and other secrets should **never be committed to Git**.
+Then configure your required model/provider credentials.
 
-A typical setup may contain provider/model configuration such as:
+## 5. Start Dragonite
 
-```text
-NVIDIA_API_KEY=your_key_here
+```bash
+python run_agent.py
 ```
 
-Use the variable names expected by the project's configuration code.
+Alternative:
+
+```bash
+python -m multi_tool_agent.cli
+```
 
 ---
 
-# Design Principles
+# 🔐 Security
 
-The project follows several principles.
+Secrets are intentionally excluded from Git.
 
-### Separation of concerns
+Use:
 
-Planning, execution, criticism, memory, tools, and synthesis are separate components.
+```text
+.env
+```
 
-### Dependency-aware execution
+for local credentials.
 
-Tasks should execute only when their dependencies are satisfied.
+Use:
 
-### Shared dependencies
+```text
+.env_example
+```
 
-The LLM client is shared instead of repeatedly constructing model clients.
+to document required variables.
 
-### Failure awareness
-
-Failures are represented explicitly rather than silently returning fake successful results.
-
-### Observable execution
-
-The system exposes progress and execution information through logging.
-
-### Honest capability boundaries
-
-This project is an **LLM orchestration system**, not AGI.
-
-It does not independently possess human-level reasoning, guaranteed factual accuracy, or unrestricted autonomy.
+**Never commit API keys, tokens, passwords, or private credentials.**
 
 ---
 
-# What I Learned
+# 🎯 Honest Project Scope
 
-Building this project helped me understand several concepts beyond simply calling an LLM API:
+Dragonite is a **hands-on autonomous-agent engineering project**, not a claim of AGI or a production-ready platform.
 
-* LLM application architecture
-* Dependency injection
+The project demonstrates practical understanding of:
+
+* multi-agent orchestration
 * DAG-based workflows
-* Task scheduling
-* Concurrent execution
-* Retry mechanisms
-* Error propagation
-* Modular Python design
-* Provider/model abstraction
-* Tool execution
-* State management
-* Memory architecture
-* Observability
-* Prompt design
-* LLM-based evaluation
-* Autonomous workflow design
+* dependency management
+* concurrent execution
+* LLM integration
+* tool execution
+* retries and failure handling
+* quality control
+* replanning
+* memory
+* observability
 
-The biggest lesson was that an AI application is not just a prompt.
+There are still important areas to improve before production deployment, including:
 
-A reliable system requires software engineering around the model.
+* broader automated tests
+* stronger sandboxing
+* persistent production-grade state
+* systematic evaluation benchmarks
+* security hardening
+* CI/CD
+* production monitoring
+* stronger failure isolation
 
----
+**Those limitations are intentionally documented rather than hidden.**
 
-# Current Limitations
-
-This project is intentionally presented honestly.
-
-It currently has limitations including:
-
-* LLM outputs are not guaranteed to be factually correct.
-* Research quality depends on the available tools and model.
-* The planner can generate imperfect task decompositions.
-* Critic decisions are themselves LLM-dependent.
-* Memory is not equivalent to human long-term memory.
-* Parallel execution currently uses a relatively simple concurrency model.
-* There is no guarantee of production-grade fault tolerance.
-* Security hardening is not yet production-level.
-* Evaluation is still an area for improvement.
-* The system is better described as an **autonomous workflow/orchestration engine** than as a fully autonomous general-purpose intelligence.
-
-These limitations are part of the reason this project is a learning/research project rather than a production platform.
+> 💡 The goal of Dragonite is not to claim that the system is perfect.
+> The goal is to demonstrate that I can design, implement, debug, and explain a non-trivial AI-agent architecture.
 
 ---
 
-# Future Improvements
+# 📚 Documentation
 
-Possible next steps include:
-
-1. Better structured task schemas.
-2. Stronger validation of planner-generated DAGs.
-3. Persistent vector-based memory.
-4. More reliable tool execution.
-5. Better evaluation benchmarks.
-6. Structured LLM outputs.
-7. Improved observability and tracing.
-8. Async execution for larger workflows.
-9. Authentication and API-level security.
-10. Web UI for interacting with the agent.
-11. Human approval checkpoints for sensitive actions.
-12. Automated regression tests.
-13. Cost and latency tracking.
-14. Better failure classification.
-15. More robust model/provider fallback.
+* 📐 [`architecture.md`](architecture.md) — system architecture
+* 📦 [`requirements.txt`](requirements.txt) — pinned dependencies
+* ⚙️ [`.env_example`](.env_example) — configuration template
+* 🎥 [`docs/demo/`](docs/demo/) — project demonstration
+* 📜 [`LICENSE`](LICENSE) — MIT License
 
 ---
 
-# Testing Philosophy
+## ⭐ Why this project matters
 
-The project should not be evaluated only by whether:
+Dragonite was built to explore what happens when an LLM application is treated as a **software system rather than just a prompt**.
 
-```text
-SUCCESS = True
-```
+The focus is on:
 
-A successful execution does not necessarily mean the generated answer is correct.
+**architecture → execution → failure handling → evaluation → recovery → observability**
 
-A stronger evaluation should measure:
-
-* Task completion rate
-* Planning accuracy
-* Dependency correctness
-* Retry effectiveness
-* Final answer quality
-* Latency
-* Failure recovery
-* LLM cost
-* Factual accuracy
-
-This distinction is important when building real AI systems.
+rather than simply generating a response from one model call.
 
 ---
 
-# Project Status
+## 📜 License
 
-**Status: Working prototype / learning project**
+MIT License.
 
-The core autonomous workflow is functional, including planning, dependency-based execution, retries, criticism, and final synthesis.
-
-The project is still evolving toward stronger testing, evaluation, security, and production reliability.
+See [`LICENSE`](LICENSE).
 
 ---
 
-# Why This Project Is Relevant to AI Engineering
+**Built by [Sanjay](https://github.com/kcsanjayj) as a hands-on exploration of autonomous AI-agent systems and Python engineering.**
 
-A basic LLM application demonstrates:
-
-```text
-Prompt → Model → Response
-```
-
-This project explores a larger engineering problem:
-
-```text
-Request
-   ↓
-Planning
-   ↓
-Task decomposition
-   ↓
-Dependency management
-   ↓
-Execution
-   ↓
-Evaluation
-   ↓
-Recovery
-   ↓
-Synthesis
-```
-
-That difference is the main learning objective of this project.
-
----
-
-# Author
-
-Built as a learning project focused on understanding **AI agents, LLM orchestration, and autonomous task execution**.
-
-The project is intentionally documented with its limitations so that its capabilities are easy to verify and defend during technical discussions.
-
----
-
-## License
-
-This project is licensed under the MIT License.
+⭐ If you find Dragonite interesting, consider starring the repository.

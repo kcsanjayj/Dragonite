@@ -74,10 +74,6 @@ The repository contains an **actual terminal recording of the working system**.
 
 ![Dragonite Demo](docs/demo/dragonite-demo.gif)
 
-▶️ **[Watch the complete 69-second demonstration](docs/demo/dragonite-demo.mp4)**
-
-The demonstration shows the real execution flow rather than a mocked UI:
-
 **request → planning → task execution → orchestration → evaluation → final output**
 
 ---

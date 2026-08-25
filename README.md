@@ -68,16 +68,19 @@ User Request
 
 ## 🎥 Live Terminal Demo
 
-The repository contains an **actual terminal recording of the working system**.
+The repository contains an actual terminal recording of the working system.
 
 ### ⚡ Instant preview
 
-<video width="100%" controls>
-  <source src="./docs/demo/dragonite.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+🎬 **[Watch the 23-second Dragonite demo](https://github.com/kcsanjayj/Dragonite/blob/main/docs/demo/dragonite.mp4)**
 
-**request → planning → task execution → orchestration → evaluation → final output**
+The demo shows:
+
+`request → planning → task execution → orchestration → evaluation → final output`
+
+> **Demo:** `docs/demo/dragonite.mp4`  
+> **Duration:** ~23 seconds  
+> **Size:** ~8.8 MB
 
 ---
 

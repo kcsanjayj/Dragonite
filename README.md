@@ -68,25 +68,7 @@ User Request
 
 ## 🎥 Live Terminal Demo
 
-<p align="center">
-  <video
-    src="https://github.com/kcsanjayj/Dragonite/raw/refs/heads/main/docs/demo/dragonite.mp4"
-    controls
-    autoplay
-    muted
-    loop
-    playsinline
-    width="900">
-  </video>
-</p>
-
-<p align="center">
-  <strong>23-second live terminal demonstration of Dragonite</strong>
-</p>
-
-<p align="center">
-  Request → Planning → Task Execution → Orchestration → Evaluation → Final Output
-</p>
+https://github.com/user-attachments/assets/ec010fab-51b9-4885-9f4d-4614c335961d
 
 ---
 

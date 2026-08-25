@@ -72,7 +72,10 @@ The repository contains an **actual terminal recording of the working system**.
 
 ### ⚡ Instant preview
 
-[▶️ Watch the Dragonite Live Demo](https://github.com/kcsanjayj/Dragonite/blob/main/docs/demo/dragonite.mp4)
+<video width="100%" controls>
+  <source src="./docs/demo/dragonite.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 **request → planning → task execution → orchestration → evaluation → final output**
 

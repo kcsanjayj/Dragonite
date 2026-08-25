@@ -68,19 +68,25 @@ User Request
 
 ## 🎥 Live Terminal Demo
 
-The repository contains an actual terminal recording of the working system.
+<p align="center">
+  <video
+    src="https://github.com/kcsanjayj/Dragonite/raw/refs/heads/main/docs/demo/dragonite.mp4"
+    controls
+    autoplay
+    muted
+    loop
+    playsinline
+    width="900">
+  </video>
+</p>
 
-### ⚡ Instant preview
+<p align="center">
+  <strong>23-second live terminal demonstration of Dragonite</strong>
+</p>
 
-🎬 **[Watch the 23-second Dragonite demo](https://github.com/kcsanjayj/Dragonite/blob/main/docs/demo/dragonite.mp4)**
-
-The demo shows:
-
-`request → planning → task execution → orchestration → evaluation → final output`
-
-> **Demo:** `docs/demo/dragonite.mp4`  
-> **Duration:** ~23 seconds  
-> **Size:** ~8.8 MB
+<p align="center">
+  Request → Planning → Task Execution → Orchestration → Evaluation → Final Output
+</p>
 
 ---
 

@@ -72,7 +72,7 @@ The repository contains an **actual terminal recording of the working system**.
 
 ### ⚡ Instant preview
 
-![Dragonite Demo](docs/demo/dragonite-demo.gif)
+![Dragonite Demo](docs/demo/dragonite.mp4)
 
 **request → planning → task execution → orchestration → evaluation → final output**
 
